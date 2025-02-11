@@ -38,12 +38,12 @@ Players get to guide the snake on a 2D plane, eating fruits that appear randomly
 2. Dynamic Snake Growth: Eating fruits causes the snake to grow
 3. Random Food Generation: Food (*) is placed at random positions that do not overlap the snake.  
 4. Game Termination: The game ends if the snake collides with the walls or itself.  
-5. Score Tracking: The player's score increases by 0,10,20 and 50 points with each fruit consumed. Stores high score until the program is terminated.  
+5. Score Tracking: The player's score increases by 10 points with each fruit consumed. Stores high score until the highscore.txt is deleted.  
 6. Real-time Input Handling: Supports non-blocking keyboard input using conio.h.  
 7. Windows Supported:It supports only Windows OS as we are using windows.h library.  
 8. Multiple-fruit system Different types of fruit emerge at different score of the user.
 9. Obstacles in a Snake game add a layer of strategic challenge by restricting movement, demanding precise control, and creating a dynamic environment that tests players' planning and reflexes.
-10. Snake name is given to user for a personal
+10. Snake name is given to user for a personal experience.
 
 ## 🛠Installation 
 
