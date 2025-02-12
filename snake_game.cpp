@@ -1,129 +1,132 @@
 #include <iostream>
-#include <conio.h>
-#include <vector>
-#include <ctime>
-#include <fstream>
-#include <windows.h>
+#include <conio.h> // For _kbhit() and _getch() to handle keyboard input
+#include <ctime> // For random seed initialization
+#include <fstream> // For file operations (saving/loading high scores)
+#include <windows.h> // For console manipulation functions like color and cursor position
 
 using namespace std;
 
-class snake_game
+struct Node
+{
+    int x, y;
+    Node *next;
+    Node(int x, int y) : x(x), y(y), next(nullptr) {}
+};
+
+class SnakeGame
 {
 private:
     int score, high_score;
-    int head_x, head_y;
     int fruit_x, fruit_y;
     char fruit_type;
     int length, breadth;
-    vector<pair<int, int>> snake;
-    vector<pair<int, int>> obstacles;
-    int speed; 
+    int speed;
     char dir;
     bool gameover;
-    int gridsize;
-    string snake_name; 
+    Node *head; // Head of the snake
+    Node *tail; // Tail of the snake
+    HANDLE hConsole; // Handle for console screen manipulation
+    int food_color;
 
 public:
-   
-    snake_game(int l, int b, string name, int game_speed)
+    SnakeGame(int l, int b, int game_speed) : length(l), breadth(b), speed(game_speed)
     {
-        length = l;
-        breadth = b;
-        snake_name = name;  
-        speed = game_speed; 
-        load_high_score();
+        hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        hide_cursor(); // Hide the blinking cursor
         reset();
+        load_high_score();
+    }
+
+    void hide_cursor() // Hides the console cursor for a cleaner display
+    {
+        CONSOLE_CURSOR_INFO cursorInfo;
+        GetConsoleCursorInfo(hConsole, &cursorInfo);
+        cursorInfo.bVisible = false;
+        SetConsoleCursorInfo(hConsole, &cursorInfo);
     }
 
     void reset()
     {
-        head_x = length / 2;
-        head_y = breadth / 2;
         score = 0;
         gameover = false;
-        dir = 'U';
-        snake.clear();
-        snake.push_back({head_x, head_y});
-        snake.push_back({head_x, head_y - 1});
-
+        dir = 'R';
+        head = new Node(6, 5); // Create initial snake of length 3
+        Node *mid = new Node(5, 5);
+        tail = new Node(4, 5);
+        head->next = mid;
+        mid->next = tail;
         generate_food();
-        generate_obstacles();
     }
 
     void generate_food()
     {
         fruit_x = rand() % (breadth - 2) + 1;
         fruit_y = rand() % (length - 2) + 1;
-        for (auto i : snake)
-        {
-            if (i.first == fruit_x && i.second == fruit_y)
-            {
-                generate_food();
-                break;
-            }
-        }
         char food_types[] = {'@', '$', 'B', '+', '*'};
         fruit_type = food_types[rand() % 5];
+
+        // Assign a random color for the food (Red, Yellow, Cyan, Magenta, White)
+        int colors[] = {12, 14, 11, 13, 15};
+        food_color = colors[rand() % 5];
     }
 
-    void generate_obstacles()
+    void gotoxy(int x, int y) // Moves the cursor to the specified position on the console
     {
-        obstacles.clear();
-        for (int i = 0; i < 5; i++)
-        {
-            obstacles.push_back({rand() % breadth, rand() % length});
-        }
+        COORD pos = {short(x), short(y)};
+        SetConsoleCursorPosition(hConsole, pos);
     }
 
-    void draw()
+    void draw() // Draws the game board, snake, and food
     {
-        system("cls");
-        cout << "Snake's Name: " << snake_name << endl; \
-        for (int i = 0; i < breadth + 2; i++)
+        gotoxy(0, 0);
+        cout << "\nYour Score: " << score << "  High Score: " << high_score << endl;
+        SetConsoleTextAttribute(hConsole, 7);
+        for (int i = 0; i < breadth; i++)
             cout << "#";
         cout << endl;
         for (int i = 0; i < length; i++)
         {
             for (int j = 0; j < breadth; j++)
             {
-                if (j == 0)
+                if (j == 0 || j == breadth - 1)
+                {
+                    SetConsoleTextAttribute(hConsole, 7);
                     cout << "#";
-                if (i == head_y && j == head_x)
-                    cout << "O";
+                }
                 else if (i == fruit_y && j == fruit_x)
+                {
+                    SetConsoleTextAttribute(hConsole, food_color);
                     cout << fruit_type;
+                }
                 else
                 {
                     bool printed = false;
-                    for (auto it : snake)
+                    Node *temp = head;
+                    while (temp)
                     {
-                        if (it.first == j && it.second == i)
+                        if (temp->x == j && temp->y == i)
                         {
-                            cout << "o";
+                            SetConsoleTextAttribute(hConsole, 10);
+                            cout << (temp == head ? 'O' : 'o');
                             printed = true;
                             break;
                         }
-                    }
-                    for (auto obs : obstacles)
-                    {
-                        if (obs.first == j && obs.second == i)
-                        {
-                            cout << "X";
-                            printed = true;
-                            break;
-                        }
+                        temp = temp->next;
                     }
                     if (!printed)
+                    {
+                        SetConsoleTextAttribute(hConsole, 7);
                         cout << " ";
+                    }
                 }
-                if (j == breadth - 1)
-                    cout << "#";
             }
             cout << endl;
         }
-        for (int i = 0; i < breadth + 2; i++)
+
+        SetConsoleTextAttribute(hConsole, 7);
+
+        for (int i = 0; i < breadth; i++)
             cout << "#";
-        cout << "\nScore of your pet " << snake_name <<": "<< score << "  High Score: " << high_score << endl;
     }
 
     void input()
@@ -160,60 +163,61 @@ public:
     }
 
     void update()
-    {   
-        pair<int, int> prev = snake[0], temp;
-        snake[0] = {head_x, head_y};
-        for (size_t i = 1; i < snake.size(); i++)
-        {
-            temp = snake[i];
-            snake[i] = prev;
-            prev = temp;
-        }
+    {
+        int prev_x = head->x, prev_y = head->y;
         switch (dir)
         {
         case 'L':
-            head_x--;
+            head->x--;
             break;
         case 'R':
-            head_x++;
+            head->x++;
             break;
         case 'U':
-            head_y--;
+            head->y--;
             break;
         case 'D':
-            head_y++;
+            head->y++;
             break;
         }
-        if (head_x >= breadth)
-            gameover = true;
-        else if (head_x < 0)
-            gameover = true;
-        if (head_y >= length)
-            gameover = true;
-        else if (head_y < 0)
-            gameover = true;
-        if (head_x == fruit_x && head_y == fruit_y)
+        if (head->x >= breadth - 1 || head->x <= 0 || head->y >= length || head->y <= -1)
         {
-            
-            
-                score += (fruit_type == '@') ? 10 : (fruit_type == '$') ? 20
-                                                                        : 50;
+            gameover = true;
+            return;
+        }
+        Node *temp = head->next;
+        int temp_x, temp_y;
+        while (temp)
+        {
+            temp_x = temp->x;
+            temp_y = temp->y;
+            temp->x = prev_x;
+            temp->y = prev_y;
+            prev_x = temp_x;
+            prev_y = temp_y;
+            temp = temp->next;
+        }
+        if (head->x == fruit_x && head->y == fruit_y)
+        {
+            score += 10;
             generate_food();
-            snake.push_back(snake.back());
+            Node *new_tail = new Node(prev_x, prev_y);
+            tail->next = new_tail;
+            tail = new_tail;
         }
-        for (auto obs : obstacles)
+        temp = head->next;
+        while (temp)
         {
-            if (obs.first == head_x && obs.second == head_y)
+            if (temp->x == head->x && temp->y == head->y)
+            {
                 gameover = true;
-        }
-        for (size_t i = 1; i < snake.size(); i++)
-        {
-            if (snake[i].first == head_x && snake[i].second == head_y)
-                gameover = true;
+                return;
+            }
+            temp = temp->next;
         }
     }
 
-    void save_high_score()
+    void save_high_score() // Save highscore in file
     {
         if (score > high_score)
         {
@@ -223,7 +227,7 @@ public:
         }
     }
 
-    void load_high_score()
+    void load_high_score() // Retrieve the highscore from file
     {
         ifstream file("highscore.txt");
         if (file)
@@ -233,21 +237,24 @@ public:
         file.close();
     }
 
+    // Runs the game loop
     bool run()
-    {   
+    {
         while (!gameover)
         {
             draw();
             input();
             update();
-            Sleep(speed); // Speed is determined by the difficulty
+            Sleep(speed);
         }
+
         save_high_score();
         return restart_prompt();
     }
 
     bool restart_prompt()
     {
+        SetConsoleTextAttribute(hConsole, 7);
         cout << "\nGAME OVER! Final Score: " << score << "\nPress 'R' to Restart or any other key to Exit." << endl;
         return (_getch() == 'r' || _getch() == 'R');
     }
@@ -256,32 +263,29 @@ public:
 int main()
 {
     srand(static_cast<unsigned int>(time(0)));
-    bool play_again = true;
-    string snake_name;
-    int difficulty;
-
-    cout << "Enter your pet snake's name: ";
-    cin >> snake_name;
-
-    
-
-    cout << "Choose difficulty level (1: Easy, 2: Medium, 3: Hard): ";
+    cout << "Instructions:\n";
+    cout << "Use 'W' or Up Arrow to Move Up\n";
+    cout << "Use 'S' or Down Arrow to Move Down\n";
+    cout << "Use 'A' or Left Arrow to Move Left\n";
+    cout << "Use 'D' or Right Arrow to Move Right\n";
+    cout << "Press 'Q' to Quit\n";
+    cout << "Press 'R' after game over to Restart\n\n";
+    int difficulty, speed;
+    cout << "Choose difficulty level\n 1: Easy\n 2: Medium\n 3: Hard\n ";
     cin >> difficulty;
+    speed = (difficulty == 1) ? 100 : (difficulty == 2) ? 70
 
-    // Set speed based on difficulty
-    int speed = 100;
-    if (difficulty == 1)
-        speed = 150;
-    else if (difficulty == 2)
-        speed = 100;
-    else if (difficulty == 3)
-        speed = 50;
+                                                        : 5;
+
+    bool play_again = true;
 
     while (play_again)
     {
-        snake_game game(20, 2 * 20, snake_name, speed); // Pass speed to the game
+        SnakeGame game(20, 40, speed);
         play_again = game.run();
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+        cout << "Thanks for playing!" << endl;
+
+        return 0;
     }
-    cout << "Thanks for playing!" << endl;
-    return 0;
 }
