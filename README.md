@@ -9,8 +9,10 @@
 - [RONAK](https://github.com/RonakVataliya)
 
 ## 📜 Table of Contents
+- Prerequisites
 - Project Description
 - Key Features
+- Prerequisites
 - Installation
 - How To Play
 - Data Structure Analysis
@@ -18,15 +20,14 @@
 - Key Member functions
 - Code Structure
 - License
-- Prerequisites
 - Contact
-
+- Future Improvements
 
 
 
 ## ✨Project Description
 
-This project shows how to develop classic *Snake Game* using C++
+This project shows how to develop classic Snake Game using C++
 programming language.It shows the usage of important concepts in Object Oriented Programming Langauge. 
 
 Players get to guide the snake on a 2D plane, eating fruits that appear randomly and trying not to crash into the walls of the game or the snake's body. Since the snake grows longer after eating, navigation gets trickier as points are added to the player's score and the snake crashes, or the player quits. 
@@ -42,24 +43,26 @@ Players get to guide the snake on a 2D plane, eating fruits that appear randomly
 6. Real-time Input Handling: Supports non-blocking keyboard input using conio.h.  
 7. Windows Supported:It supports only Windows OS as we are using windows.h library.  
 8. Multiple-fruit system Different types of fruit emerge at different score of the user.
-9. Obstacles in a Snake game add a layer of strategic challenge by restricting movement, demanding precise control, and creating a dynamic environment that tests players' planning and reflexes.
-10. Snake name is given to user for a personal experience.
+
+## 🧰Prerequisites
+- A C++ compiler (e.g., g++)
+- Windows Operating System
 
 ## 🛠Installation 
 
 To run the Snake game, follow these steps:
 
-1.  *Clone the Repository:*
+1.  Clone the Repository:
     bash
     $ git clone [https://github.com/yourusername/snake-game-cpp.git](https://github.com/yourusername/snake-game-cpp.git)
     $ cd snake-game-cpp
     
-2.  *Compile the Code (using g++):*
+2.  Compile the Code (using g++):
     bash
     $ g++ snake_game.cpp -o snake_game.exe  # For Windows
     $ g++ snake_game.cpp -o snake_game
     
-3.  *Run the Game:*
+3.  Run the Game:
     bash
     $ ./snake_game.exe  # For Windows   
     $ ./snake_game
@@ -78,31 +81,29 @@ To run the Snake game, follow these steps:
 
 | Key        | Action                                      |
 |-----------|---------------------------------------------|
-| *W or ↑*  | ⬆ Move Up                                |
-| *A or ←*  | ⬅ Move Left                              |
-| *S or ↓*  | ⬇ Move Down                              |
-| *D or →*  | ➡ Move Right                             |
-| *Q*  | ❌ Exit the Game                          |
-| *R*      | 🔄 Restart the Game and Select Difficulty Again |
+| W or ↑  | ⬆ Move Up                                |
+| A or ←  | ⬅ Move Left                              |
+| S or ↓  | ⬇ Move Down                              |
+| D or →  | ➡ Move Right                             |
+| Q  | ❌ Exit the Game                          |
+| R      | 🔄 Restart the Game and Select Difficulty Again |
  🔥 Difficulty Levels
 
 | Level      | Sleeptime (ms delay) | Difficulty              |
 |-----------|----------------|-------------------------|
-| *1 - Easy*   | 150 ms         | 🟢 Best for beginners   |
-| *2 - Medium* | 100 ms         | 🟡 Balanced challenge  |
-| *3 - Hard*   |  50 ms          | 🔴 Fast-paced gameplay |
+| 1 - Easy   | 150 ms         | 🟢 Best for beginners   |
+| 2 - Medium | 100 ms         | 🟡 Balanced challenge  |
+| 3 - Hard   |  50 ms          | 🔴 Fast-paced gameplay |
 
 
 ## 📚Data Structures Analysis
 
 ## 🔹 Data Structures Used
 
-### Vector(std::vector<pair<int, int>>) ⛓
+### Linked List (Node Structure) 
 
-*   Stores the snake’s body.
-*   Displays Obstacle in Grid.
-*   Allows efficient insertion.
-*   Eliminates the need for resizing like vector.
+*  Stores the snake’s body.
+*  Enables efficient insertion and deletion of body segments.
 
 ### 2D Grid Representation (std::pair<int, int>) 🗺
 
@@ -134,12 +135,11 @@ This document outlines the object-oriented structure of the Snake game.
 *   📏 length: (int) The length of the game grid (rows).
 *   📐 breadth: (int) The breadth of the game grid (columns).
 *   ⛓ snake: (vector<pair<int, int>>) Stores the coordinates of the snake's body segments.
-*   🚧 obstacles: (vector<pair<int, int>>) Stores the coordinates of the obstacles.
 *   💨 speed: (int) The game speed (delay between updates).
 *   ➡ dir: (char) The current direction of the snake ('U', 'D', 'L', 'R').
 *   💀 gameover: (bool) Flag indicating if the game is over.
 *   🔢 gridsize: (int) Unused in the provided code.  (Could be removed or used in a future implementation).
-*   🐉snake_name: (string) stores name of our snake.
+
 
 ### ⚙Key Member Functions
 * 🏗snake_game(int l, int b): Constructor. Initializes the game with the given length and breadth.
@@ -155,10 +155,6 @@ This document outlines the object-oriented structure of the Snake game.
 *   ❓ restart_prompt(): Asks the player if they want to restart the game. 
 
 ---
-
-
-
-
 ## 📁 Code Structure
 📂 Snake_Game_C++/  
 │── 📄 README.md  
@@ -175,9 +171,13 @@ The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
 
-## 🧰Prerequisites
-- A C++ compiler (e.g., g++)
-- Windows or Linux terminal (modifications required for Linux)
+
+## 🚀Future Improvements
+✅ Make it cross-platform using ncurses (Linux/Mac).    
+✅ Improve graphics with colored UI and animations.     
+✅ Add different food types that provide unique effects (e.g., speed boost, slow motion).
+✅ Obstacles can be added for better difficulty and overall experience.
+✅"Toroidal Gameplay"♾ that means teleportation of snake from one edge to another.
 ## 📞 Contact
 💡Found a bug or have suggestions? Open an issue or reach out:
 -> 📧 Email : 202401241@daiict.ac.in
