@@ -276,6 +276,7 @@ int main()
     speed = (difficulty == 1) ? 100 : (difficulty == 2) ? 70
 
                                                         : 5;
+                                                        system("cls");
 
     bool play_again = true;
 
