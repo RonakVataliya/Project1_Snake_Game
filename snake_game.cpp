@@ -286,6 +286,6 @@ int main()
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
         cout << "Thanks for playing!" << endl;
 
-        return 0;
+        
     }
 }
