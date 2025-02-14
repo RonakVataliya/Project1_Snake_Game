@@ -274,17 +274,17 @@ int main()
 {
     srand(static_cast<unsigned int>(time(0)));
     cout << "Instructions:\n";
-    cout << "Use 'W' or Up Arrow to Move Up\n";
-    cout << "Use 'S' or Down Arrow to Move Down\n";
-    cout << "Use 'A' or Left Arrow to Move Left\n";
-    cout << "Use 'D' or Right Arrow to Move Right\n";
-    cout << "Press 'Q' to Quit\n";
+    cout << "Use 'w' or Up Arrow to Move Up\n";
+    cout << "Use 's' or Down Arrow to Move Down\n";
+    cout << "Use 'a' or Left Arrow to Move Left\n";
+    cout << "Use 'd' or Right Arrow to Move Right\n";
+    cout << "Press 'q' to Quit\n";
     
-    cout << "Press 'R' after game over to Restart\n\n";
+    cout << "Press 'r' after game over to Restart\n\n";
     int difficulty, speed;
     cout << "Choose difficulty level\n 1: Easy\n 2: Medium\n 3: Hard\n ";
     cin >> difficulty;
-    speed = (difficulty == 1) ? 100 : (difficulty == 2) ? 70 : 5;
+    speed = (difficulty == 1) ? 150 : (difficulty == 2) ? 100 : 50;
     system("cls");
 
     bool play_again = true;
