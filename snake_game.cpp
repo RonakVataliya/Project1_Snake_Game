@@ -1,8 +1,8 @@
 #include <iostream>
-#include <conio.h> // For _kbhit() and _getch() to handle keyboard input
-#include <ctime> // For random seed initialization
-#include <fstream> // For file operations (saving/loading high scores)
-#include <windows.h> // For console manipulation functions like color and cursor position
+#include <conio.h>      // For _kbhit() and _getch() to handle keyboard input
+#include <ctime>        // For random seed initialization
+#include <fstream>      // For file operations (saving/loading high scores)
+#include <windows.h>    // For console manipulation functions like color and cursor position
 
 using namespace std;
 
@@ -23,16 +23,17 @@ private:
     int speed;
     char dir;
     bool gameover;
-    Node *head; // Head of the snake
-    Node *tail; // Tail of the snake
-    HANDLE hConsole; // Handle for console screen manipulation
+   
+    Node *head;       // Head of the snake
+    Node *tail;       // Tail of the snake
+    HANDLE hConsole;  // Handle for console screen manipulation
     int food_color;
 
 public:
     SnakeGame(int l, int b, int game_speed) : length(l), breadth(b), speed(game_speed)
     {
         hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-        hide_cursor(); // Hide the blinking cursor
+        hide_cursor();   // Hide the blinking cursor
         reset();
         load_high_score();
     }
@@ -49,8 +50,10 @@ public:
     {
         score = 0;
         gameover = false;
+        
         dir = 'R';
-        head = new Node(6, 5); // Create initial snake of length 3
+        // Create initial snake of length 3
+        head = new Node(6, 5);
         Node *mid = new Node(5, 5);
         tail = new Node(4, 5);
         head->next = mid;
@@ -72,15 +75,16 @@ public:
 
     void gotoxy(int x, int y) // Moves the cursor to the specified position on the console
     {
-        COORD pos = {short(x), short(y)};
+        COORD pos = { short(x), short(y) };
         SetConsoleCursorPosition(hConsole, pos);
     }
 
     void draw() // Draws the game board, snake, and food
     {
         gotoxy(0, 0);
-        cout << "\nYour Score: " << score << "  High Score: " << high_score << endl;
         SetConsoleTextAttribute(hConsole, 7);
+        cout << "\nYour Score: " << score << "  High Score: " << high_score << endl;
+       
         for (int i = 0; i < breadth; i++)
             cout << "#";
         cout << endl;
@@ -90,7 +94,6 @@ public:
             {
                 if (j == 0 || j == breadth - 1)
                 {
-                    SetConsoleTextAttribute(hConsole, 7);
                     cout << "#";
                 }
                 else if (i == fruit_y && j == fruit_x)
@@ -115,7 +118,6 @@ public:
                     }
                     if (!printed)
                     {
-                        SetConsoleTextAttribute(hConsole, 7);
                         cout << " ";
                     }
                 }
@@ -123,17 +125,19 @@ public:
             cout << endl;
         }
 
-        SetConsoleTextAttribute(hConsole, 7);
-
         for (int i = 0; i < breadth; i++)
             cout << "#";
+
+       
+        
     }
 
     void input()
     {
         if (_kbhit())
         {
-            switch (_getch())
+            char key = _getch();
+            switch (key)
             {
             case 'a':
             case 75:
@@ -158,12 +162,17 @@ public:
             case 'q':
                 gameover = true;
                 break;
+            
             }
         }
     }
 
     void update()
     {
+       
+        
+
+
         int prev_x = head->x, prev_y = head->y;
         switch (dir)
         {
@@ -255,7 +264,8 @@ public:
     bool restart_prompt()
     {
         SetConsoleTextAttribute(hConsole, 7);
-        cout << "\nGAME OVER! Final Score: " << score << "\nPress 'R' to Restart or any other key to Exit." << endl;
+        cout << "\nGAME OVER! Final Score: " << score
+             << "\nPress 'R' to Restart or any key to Exit." << endl;
         return (_getch() == 'r' || _getch() == 'R');
     }
 };
@@ -269,24 +279,20 @@ int main()
     cout << "Use 'A' or Left Arrow to Move Left\n";
     cout << "Use 'D' or Right Arrow to Move Right\n";
     cout << "Press 'Q' to Quit\n";
+    
     cout << "Press 'R' after game over to Restart\n\n";
     int difficulty, speed;
     cout << "Choose difficulty level\n 1: Easy\n 2: Medium\n 3: Hard\n ";
     cin >> difficulty;
-    speed = (difficulty == 1) ? 100 : (difficulty == 2) ? 70
-
-                                                        : 5;
-                                                        system("cls");
+    speed = (difficulty == 1) ? 100 : (difficulty == 2) ? 70 : 5;
+    system("cls");
 
     bool play_again = true;
-
     while (play_again)
     {
         SnakeGame game(20, 40, speed);
         play_again = game.run();
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
         cout << "Thanks for playing!" << endl;
-
-        
     }
+    return 0;
 }
