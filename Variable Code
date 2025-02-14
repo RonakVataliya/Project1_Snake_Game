@@ -1,0 +1,8 @@
+if (head_x == fruit_x && head_y == fruit_y)
+        {
+
+            score += (fruit_type == '@') ? 10 : (fruit_type == '$') ? 20
+                                                                    : 50;
+            generate_food();
+            snake.push_back(snake.back());
+        }
