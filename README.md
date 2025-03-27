@@ -54,7 +54,7 @@ To run the Snake game, follow these steps:
 
 1.  Clone the Repository:
     bash
-    $ git clone [https://github.com/yourusername/snake-game-cpp.git](https://github.com/yourusername/snake-game-cpp.git)
+    $ git clone [https://github.com/RonakVataliys/snake-game-cpp.git](https://github.com/yourusername/snake-game-cpp.git)
     $ cd snake-game-cpp
     
 2.  Compile the Code (using g++):
